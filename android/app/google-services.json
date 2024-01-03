@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "237321230270",
+    "project_id": "sttg-ac2a3",
+    "storage_bucket": "sttg-ac2a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237321230270:android:4e1bb49ae39b7dc1fe4bef",
+        "android_client_info": {
+          "package_name": "com.example.untitled"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUec5hLkoCUKuOJqi5DLgGAyOm_uev-fI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
