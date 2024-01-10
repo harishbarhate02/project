@@ -1,8 +1,7 @@
 // TODO Implement this library.
 import 'package:flutter/material.dart';
-import 'package:untitled/screen/home/navbar.dart';
-
 import '../../services/auth.dart';
+import 'navbar.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -37,7 +36,7 @@ class _Home extends State<Home> {
     return  Scaffold(
       drawer : NavBar(),
       appBar: AppBar(
-        title: const Text('Smart TimeTable'),
+        title: const Text('Dashbooard'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Center(child: SignOut),

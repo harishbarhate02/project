@@ -1,9 +1,8 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../model/FirebaseUser.dart';
+import 'Dashboard/dashboard.dart';
 import 'authenticate/handler.dart';
-import 'home/dashboard.dart';
-import 'home/rooms_labs.dart';
 
 class Wrapper extends StatelessWidget {
   @override
