@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/screen/Dashboard/dashboard.dart';
+
 import '../../services/auth.dart';
-import '../Rooms_Labs/Room_lab.dart';
 
 class NavBar extends StatelessWidget {
   NavBar({super.key});
-  final AuthService _auth =  AuthService();
+  final AuthService _auth = new AuthService();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -13,8 +13,8 @@ class NavBar extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
-              accountName: const Text("Harish Bhagwan Barhate "),
-              accountEmail: const Text('harishbarhate29@gamil.com'),
+              accountName: Text("Harish Bhagwan Barhate "),
+              accountEmail: Text('harishbarhate29@gamil.com'),
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(
                   child:  Image.asset('assets/image/profile.jpeg'),
@@ -22,8 +22,8 @@ class NavBar extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.space_dashboard),
-              title: const Text("Dashboard"),
+              leading: Icon(Icons.space_dashboard),
+              title: Text("Dashboard"),
               onTap: (){
                 Navigator.push(
                       context,
@@ -32,18 +32,8 @@ class NavBar extends StatelessWidget {
               }
             ),
             ListTile(
-                leading: const Icon(Icons.house),
-                title: const Text("Rooms & Labs"),
-                onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RoomsLabs()),
-                  );
-                }
-            ),
-            ListTile(
-                leading: const Icon(Icons.book_outlined),
-                title: const Text("Courses"),
+                leading: Icon(Icons.house),
+                title: Text("Rooms & Labs"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -52,8 +42,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: const Icon(Icons.school),
-                title: const Text("Faculty"),
+                leading: Icon(Icons.book_outlined),
+                title: Text("Courses"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -62,8 +52,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: const Icon(Icons.group),
-                title: const Text("Classes"),
+                leading: Icon(Icons.school),
+                title: Text("Faculty"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -72,8 +62,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: const Icon(Icons.space_dashboard),
-                title: const Text("Dashboard"),
+                leading: Icon(Icons.group),
+                title: Text("Classes"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -82,8 +72,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: const Icon(Icons.space_dashboard),
-                title: const Text("Dashboard"),
+                leading: Icon(Icons.space_dashboard),
+                title: Text("Dashboard"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -92,8 +82,18 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-              leading: const Icon(Icons.logout_outlined),
-              title: const Text("Sign Out"),
+                leading: Icon(Icons.space_dashboard),
+                title: Text("Dashboard"),
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
+                }
+            ),
+            ListTile(
+              leading: Icon(Icons.logout_outlined),
+              title: Text("Sign Out"),
               onTap: () async {
                 await _auth.signOut();
               },

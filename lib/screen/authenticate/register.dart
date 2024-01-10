@@ -159,14 +159,19 @@ class _Register extends State<Register> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text('Welcome ',style: TextStyle( fontSize: 40),),
+                    const SizedBox(height: 45.0),
+                    // CircleAvatar(
+                    //   radius: 80,
+                    //   backgroundImage: _image != null ? FileImage(_image!) : NetworkImage(_user.photoURL ?? ''),
+                    // ),
+
                     const SizedBox(height: 25.0),
                     emailField,
                     const SizedBox(height: 25.0),
                     passwordField,
                     const SizedBox(height: 25.0),
                     txtbutton,
-                    const SizedBox(height: 25.0),
+                    const SizedBox(height: 35.0),
                     registerButton,
 
                   ],
