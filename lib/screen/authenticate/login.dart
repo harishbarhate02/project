@@ -1,6 +1,5 @@
 
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../model/loginuser.dart';
 import '../../services/auth.dart';
@@ -25,14 +24,6 @@ class _Login extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    var defaultheight = 500.0;
-    var defaultwidth =  300.0;
-
-    if (kIsWeb) {
-      // Set web-specific padding and margin
-      defaultheight = 400;
-      defaultwidth = 300;
-    }
     final emailField = TextFormField(
         controller: _email,
         autofocus: false,
@@ -122,12 +113,12 @@ class _Login extends State<Login> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Login Demo Page'),
+        title: const Text('Smart TimeTable'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Center(
         child: Container(
-          padding:  EdgeInsets.all(30),
+          padding:  EdgeInsets.all(0),
           decoration: const BoxDecoration(
 
           ),
@@ -137,21 +128,25 @@ class _Login extends State<Login> {
               Form(
                 key: _formKey,
                 child: Container(
-                  padding: EdgeInsets.all(20),
-                  height: defaultheight,
-                  width: defaultwidth,
+                  padding: EdgeInsets.symmetric(vertical: 20,horizontal: 50),
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.orange, // Border color
-                      width: 2.0, // Border width
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)), // Optional: Border radius
+                    color: Colors.orange[100],
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1.0),
+                        blurRadius: 25.0,
+                        offset: Offset(1.0, 5.0), // adjust these values to change the shadow direction and spread
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text('Welcome',style: TextStyle( fontSize: 40),),
+                      const Text('Welcome Back!',style: TextStyle( fontSize: 40),),
                       const SizedBox(height: 25.0),
                       emailField,
                       const SizedBox(height: 25.0),
@@ -159,7 +154,6 @@ class _Login extends State<Login> {
                       txtbutton,
                       const SizedBox(height: 25.0),
                       loginEmailPasswordButon,
-                      const SizedBox(height: 15.0),
                     ],
                   ),
                 ),

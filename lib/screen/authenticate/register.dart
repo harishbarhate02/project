@@ -1,15 +1,13 @@
-import 'dart:html';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import
+'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import 'package:image_picker/image_picker.dart';
 import '../../model/loginuser.dart';
 import '../../services/auth.dart';
 
 class Register extends StatefulWidget {
   final Function? toggleView;
-  Register({this.toggleView});
+  const Register({this.toggleView});
 
 
   @override
@@ -28,26 +26,8 @@ class _Register extends State<Register> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 
-
-
   @override
   Widget build(BuildContext context) {
-    final usernameField = TextFormField(
-        controller: _username,
-        autofocus: false,
-        validator: (value) {
-          if (value == null) {
-
-            return 'Enter a Username';
-          }
-        },
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Username",
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
-        )
-    );
 
     final emailField = TextFormField(
         controller: _email,
@@ -109,10 +89,24 @@ class _Register extends State<Register> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+            try {
+
+              final snapshot = await FirebaseFirestore.instance
+                  .collection('users')
+                  .where('username', isEqualTo: _username)
+                  .get(); // Add await here
+              // ...
+
+            } catch (e) {
+              // ...
+            }
+
             dynamic result = await _auth.registerEmailPassword(
+
                 LoginUser(email: _email.text, password: _password.text));
             if (result.uid == null) {
               //null means unsuccessfull authentication
+
               showDialog(
                   context: context,
                   builder: (context) {
@@ -137,39 +131,57 @@ class _Register extends State<Register> {
         title: const Text('Registration Demo Page'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            autovalidateMode: AutovalidateMode.always,
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 45.0),
-                  // CircleAvatar(
-                  //   radius: 80,
-                  //   backgroundImage: _image != null ? FileImage(_image!) : NetworkImage(_user.photoURL ?? ''),
-                  // ),
-                  usernameField,
-                  const SizedBox(height: 25.0),
-                  emailField,
-                  const SizedBox(height: 25.0),
-                  passwordField,
-                  const SizedBox(height: 25.0),
-                  txtbutton,
-                  const SizedBox(height: 35.0),
-                  registerButton,
-                  const SizedBox(height: 15.0),
-                ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+
+          children: [
+            Form(
+              autovalidateMode: AutovalidateMode.always,
+              key: _formKey,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 50),
+                height: MediaQuery.of(context).size.height * 0.6,
+                width: MediaQuery.of(context).size.width * 0.30,
+                decoration: BoxDecoration(
+                  color: Colors.orange[100],
+                  borderRadius: BorderRadius.circular(20.0),
+
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(1.0),
+                      blurRadius: 25.0,
+                      offset: const Offset(0.0, 5.0), // adjust these values to change the shadow direction and spread
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const SizedBox(height: 45.0),
+                    // CircleAvatar(
+                    //   radius: 80,
+                    //   backgroundImage: _image != null ? FileImage(_image!) : NetworkImage(_user.photoURL ?? ''),
+                    // ),
+
+                    const SizedBox(height: 25.0),
+                    emailField,
+                    const SizedBox(height: 25.0),
+                    passwordField,
+                    const SizedBox(height: 25.0),
+                    txtbutton,
+                    const SizedBox(height: 35.0),
+                    registerButton,
+
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
 }

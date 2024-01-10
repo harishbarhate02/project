@@ -14,7 +14,7 @@ void  initState(){
   _navigatetohome();
   }
 _navigatetohome() async{
-  await Future.delayed(Duration(seconds: 5));
+  await Future.delayed(const Duration(seconds: 5));
   Navigator.pushReplacement(
       context,
       MaterialPageRoute(
