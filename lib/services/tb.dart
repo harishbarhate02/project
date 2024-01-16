@@ -105,7 +105,7 @@ class TimetableGenerator {
   }
 }
 
-void main() {
+List<List<Map<String, int>>> main() {
   final List<Map<String, int>> subjects = [
     {'Math': 2},
     {'Physics': 1},
@@ -121,5 +121,5 @@ void main() {
   final Timetable bestTimetable = timetableGenerator.runGeneticAlgorithm(100);
 
   // Print the best timetable
-  print(bestTimetable.timetable);
+  return(bestTimetable.timetable);
 }
