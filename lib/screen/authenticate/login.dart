@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import '../../model/loginuser.dart';
 import '../../services/auth.dart';
@@ -77,8 +75,6 @@ class _Login extends State<Login> {
         },
         child: const Text('New? Register here'));
 
-
-
     final loginEmailPasswordButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -117,49 +113,48 @@ class _Login extends State<Login> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Center(
-        child: Container(
-          padding:  EdgeInsets.all(0),
-          decoration: const BoxDecoration(
-
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Form(
-                key: _formKey,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20,horizontal: 50),
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  decoration: BoxDecoration(
-                    color: Colors.orange[100],
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(1.0),
-                        blurRadius: 25.0,
-                        offset: Offset(1.0, 5.0), // adjust these values to change the shadow direction and spread
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text('Welcome Back!',style: TextStyle( fontSize: 40),),
-                      const SizedBox(height: 25.0),
-                      emailField,
-                      const SizedBox(height: 25.0),
-                      passwordField,
-                      txtbutton,
-                      const SizedBox(height: 25.0),
-                      loginEmailPasswordButon,
-                    ],
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Form(
+              key: _formKey,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.0001, horizontal: 50),
+                height: MediaQuery.of(context).size.height * 0.6,
+                width: MediaQuery.of(context).size.width * 0.3,
+                decoration: BoxDecoration(
+                  color: Colors.orange[100],
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(1.0),
+                      blurRadius: 25.0,
+                      offset: Offset(1.0,
+                          5.0), // adjust these values to change the shadow direction and spread
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text(
+                      'Welcome Back!',
+                      style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 25.0),
+                    emailField,
+                    const SizedBox(height: 25.0),
+                    passwordField,
+                    const SizedBox(height: 25.0),
+                    txtbutton,
+                    const SizedBox(height: 25.0),
+                    loginEmailPasswordButon,
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

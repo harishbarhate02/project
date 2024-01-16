@@ -5,7 +5,7 @@ import '../../services/auth.dart';
 
 class NavBar extends StatelessWidget {
   NavBar({super.key});
-  final AuthService _auth = new AuthService();
+  final AuthService _auth =  AuthService();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -13,8 +13,8 @@ class NavBar extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text("Harish Bhagwan Barhate "),
-              accountEmail: Text('harishbarhate29@gamil.com'),
+              accountName: const Text("Harish Bhagwan Barhate "),
+              accountEmail: const Text('harishbarhate29@gamil.com'),
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(
                   child:  Image.asset('assets/image/profile.jpeg'),
@@ -22,8 +22,8 @@ class NavBar extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.space_dashboard),
-              title: Text("Dashboard"),
+              leading: const Icon(Icons.space_dashboard),
+              title: const Text("Dashboard"),
               onTap: (){
                 Navigator.push(
                       context,
@@ -32,8 +32,8 @@ class NavBar extends StatelessWidget {
               }
             ),
             ListTile(
-                leading: Icon(Icons.house),
-                title: Text("Rooms & Labs"),
+                leading: const Icon(Icons.house),
+                title: const Text("Rooms & Labs"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -42,8 +42,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: Icon(Icons.book_outlined),
-                title: Text("Courses"),
+                leading: const Icon(Icons.book_outlined),
+                title: const Text("Courses"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -52,8 +52,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: Icon(Icons.school),
-                title: Text("Faculty"),
+                leading: const Icon(Icons.school),
+                title: const Text("Faculty"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -62,8 +62,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: Icon(Icons.group),
-                title: Text("Classes"),
+                leading: const Icon(Icons.group),
+                title: const Text("Classes"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -72,8 +72,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: Icon(Icons.space_dashboard),
-                title: Text("Dashboard"),
+                leading: const Icon(Icons.space_dashboard),
+                title: const Text("Dashboard"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -82,8 +82,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-                leading: Icon(Icons.space_dashboard),
-                title: Text("Dashboard"),
+                leading: const Icon(Icons.space_dashboard),
+                title: const Text("Dashboard"),
                 onTap: (){
                   Navigator.push(
                     context,
@@ -92,8 +92,8 @@ class NavBar extends StatelessWidget {
                 }
             ),
             ListTile(
-              leading: Icon(Icons.logout_outlined),
-              title: Text("Sign Out"),
+              leading: const Icon(Icons.logout_outlined),
+              title: const Text("Sign Out"),
               onTap: () async {
                 await _auth.signOut();
               },

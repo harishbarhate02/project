@@ -14,7 +14,7 @@ void  initState(){
   _navigatetohome();
   }
 _navigatetohome() async{
-  await Future.delayed(const Duration(seconds: 5));
+  await Future.delayed(const Duration(seconds: 1));
   Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -31,7 +31,7 @@ _navigatetohome() async{
               SizedBox( height : 250),
               CircleAvatar(
                 radius: 80,
-                backgroundImage: AssetImage('image/logo.png'),
+                backgroundImage: AssetImage('assets/image/logo.png'),
               ),
               SizedBox( height : 150),
               Text('Smart TimeTable;',style: TextStyle(
