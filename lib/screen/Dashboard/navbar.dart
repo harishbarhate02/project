@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/screen/Dashboard/dashboard.dart';
-
 import '../../services/auth.dart';
+import '../Rooms_Labs/Room_lab.dart';
 
 class NavBar extends StatelessWidget {
   NavBar({super.key});
@@ -37,7 +37,7 @@ class NavBar extends StatelessWidget {
                 onTap: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Home()),
+                    MaterialPageRoute(builder: (context) => RoomsLabs()),
                   );
                 }
             ),
