@@ -1,42 +1,5 @@
 import 'package:flutter/material.dart';
-
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: AddRoomLabScreen(),
-    );
-  }
-}
-
-class AddRoomLabScreen extends StatelessWidget {
-  const AddRoomLabScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add New Room/Lab'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const AddRoomLabDialog();
-              },
-            );
-          },
-          child: const Text('Add New Room/Lab'),
-        ),
-      ),
-    );
-  }
-}
+import '../Rooms_Labs/Room_lab.dart';
 
 class AddRoomLabDialog extends StatefulWidget {
   const AddRoomLabDialog({super.key});
@@ -49,7 +12,7 @@ class AddRoomLabDialogState extends State<AddRoomLabDialog> {
   String _selectedCategory = 'Room'; // Default selection for dropdown
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _capacityController = TextEditingController();
-
+  final TextEditingController _idController = TextEditingController();
   @override
   void dispose() {
     _nameController.dispose();
@@ -64,6 +27,11 @@ class AddRoomLabDialogState extends State<AddRoomLabDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          TextField(
+            controller: _idController,
+            decoration: const InputDecoration(labelText: 'Name'),
+          ),
+          const SizedBox(height: 10),
           TextField(
             controller: _nameController,
             decoration: const InputDecoration(labelText: 'Name'),
@@ -104,12 +72,13 @@ class AddRoomLabDialogState extends State<AddRoomLabDialog> {
           onPressed: () {
             // Here you can use the values entered in the text fields and dropdown
             String name = _nameController.text;
+            String id = _idController.text;
             String category = _selectedCategory;
             int capacity = int.tryParse(_capacityController.text) ?? 0;
 
             // Add logic to save room/lab details
             // For example: call a function to handle the data
-            saveRoomLabDetails(name, category, capacity);
+            var x = Room(id: id, name:  name, capacity: capacity, category: category);
 
             Navigator.of(context).pop();
           },
@@ -117,11 +86,5 @@ class AddRoomLabDialogState extends State<AddRoomLabDialog> {
         ),
       ],
     );
-  }
-
-  void saveRoomLabDetails(String name, String category, int capacity) {
-    // Implement your logic here to save room/lab details
-    // This could be API calls, database operations, etc.
-    print('Name: $name, Category: $category, Capacity: $capacity');
   }
 }
