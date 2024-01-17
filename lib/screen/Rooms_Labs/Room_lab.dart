@@ -214,7 +214,7 @@ class _RoomsLabsState extends State<RoomsLabs> {
             ),
             TextField(
               controller: _capacityController,
-              decoration: const InputDecoration(hintText: 'Enter room name'),
+              decoration: const InputDecoration(hintText: 'Enter Capacity'),
             ),
           ],
         ),
