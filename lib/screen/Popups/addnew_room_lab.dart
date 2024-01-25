@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -42,10 +45,10 @@ class AddRoomLabDialog extends StatefulWidget {
   const AddRoomLabDialog({super.key});
 
   @override
-  AddRoomLabDialogState createState() => AddRoomLabDialogState();
+  _AddRoomLabDialogState createState() => _AddRoomLabDialogState();
 }
 
-class AddRoomLabDialogState extends State<AddRoomLabDialog> {
+class _AddRoomLabDialogState extends State<AddRoomLabDialog> {
   String _selectedCategory = 'Room'; // Default selection for dropdown
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _capacityController = TextEditingController();

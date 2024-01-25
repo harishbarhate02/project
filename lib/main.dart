@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       initialData: null,
       child: MaterialApp(
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
           useMaterial3: true,
         ),
         home: const Splash(),
