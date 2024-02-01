@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../model/loginuser.dart';
 import '../../services/auth.dart';
@@ -22,6 +23,10 @@ class _Login extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+
+    if (kIsWeb) {
+      // Set web-specific padding and margin
+    }
     final emailField = TextFormField(
         controller: _email,
         autofocus: false,
@@ -68,19 +73,38 @@ class _Login extends State<Login> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(32.0),
             )));
-
     final txtbutton = TextButton(
-        onPressed: () {
-          widget.toggleView!();
-        },
-        child: const Text('New? Register here'));
+      onPressed: () {
 
-    final loginEmailPasswordButon = Material(
+      },
+      child: Text('Forgot Password?'),
+    );
+
+
+    final signEmailPasswordButton = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(30.0),
+        color: Colors.white,
+        child: MaterialButton(
+            height: MediaQuery.of(context).size.width*.04,
+            minWidth: MediaQuery.of(context).size.width*.15,
+            padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            onPressed: () {
+              widget.toggleView!();
+            },
+            child: Text(
+              "Sign up",
+              style: TextStyle(color: Colors.black, fontSize: 24.0),
+              textAlign: TextAlign.center,
+            )));
+
+    final loginEmailPasswordButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
       child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width*.04,
+        minWidth: MediaQuery.of(context).size.width*.15,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -100,7 +124,7 @@ class _Login extends State<Login> {
         },
         child: Text(
           "Log in",
-          style: TextStyle(color: Theme.of(context).primaryColorLight),
+          style: TextStyle(color: Theme.of(context).primaryColorLight, fontSize: 24.0),
           textAlign: TextAlign.center,
         ),
       ),
@@ -108,53 +132,87 @@ class _Login extends State<Login> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Smart TimeTable'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Form(
-              key: _formKey,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.0001, horizontal: 50),
-                height: MediaQuery.of(context).size.height * 0.6,
-                width: MediaQuery.of(context).size.width * 0.3,
-                decoration: BoxDecoration(
-                  color: Colors.orange[100],
-                  borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(1.0),
-                      blurRadius: 25.0,
-                      offset: Offset(1.0,
-                          5.0), // adjust these values to change the shadow direction and spread
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/image/background.jpeg'), // Replace with your image path
+            fit: BoxFit.cover, // Adjust fit as needed (cover, fill, etc.)
+          ),
+        ),
+        child: Container(
+          margin: EdgeInsets.all(
+            MediaQuery.of(context).size.height * 0.1,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Login to Your Account',
+                            style: TextStyle(
+                                fontSize: 35, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 20),
+                        const Text('Login using Email',
+                            style: TextStyle(fontSize: 15)),
+                        Center(
+                          child: Container(
+                              width: MediaQuery.of(context).size.width * 0.35,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 20),
+                                emailField,
+                                const SizedBox(height: 20),
+                                passwordField,
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                        loginEmailPasswordButton,
+                      ],
                     ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      'Welcome Back!',
-                      style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 25.0),
-                    emailField,
-                    const SizedBox(height: 25.0),
-                    passwordField,
-                    const SizedBox(height: 25.0),
-                    txtbutton,
-                    const SizedBox(height: 25.0),
-                    loginEmailPasswordButon,
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(topRight: Radius.circular(30), bottomRight: Radius.circular(30)),
+                    color: Colors.teal[400],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('New Here?',
+                          style: TextStyle(fontSize: 30, color: Colors.white)),
+                      const SizedBox(height: 20),
+                      const Text(
+                          'Sign up and discover a great amount of new opportunities!',
+                          style: TextStyle(color: Colors.white)),
+                      const SizedBox(height: 80),
+                      signEmailPasswordButton,
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

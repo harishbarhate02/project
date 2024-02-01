@@ -1,13 +1,12 @@
 
-import
-'package:cloud_firestore/cloud_firestore.dart';
+import'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../model/loginuser.dart';
 import '../../services/auth.dart';
 
 class Register extends StatefulWidget {
   final Function? toggleView;
-  const Register({this.toggleView});
+  const Register({super.key, this.toggleView});
 
 
   @override
@@ -20,7 +19,6 @@ class _Register extends State<Register> {
   final AuthService _auth = AuthService();
 
   bool _obscureText = true;
-  final _username = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -39,12 +37,14 @@ class _Register extends State<Register> {
             }
             return 'Enter a Valid Email Address';
           }
+          return null;
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             hintText: "Email",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+
     final passwordField = TextFormField(
         obscureText: _obscureText,
         controller: _password,
@@ -74,12 +74,24 @@ class _Register extends State<Register> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
-    final txtbutton = TextButton(
+    final loginButton = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Theme.of(context).primaryColor,
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          widget.toggleView!();
-        },
-        child: const Text('Go to login'));
+    widget.toggleView!();
+    },
 
+        child: Text(
+          "Si",
+          style: TextStyle(color: Theme.of(context).primaryColorLight),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
     final registerButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -93,7 +105,6 @@ class _Register extends State<Register> {
 
               final snapshot = await FirebaseFirestore.instance
                   .collection('users')
-                  .where('username', isEqualTo: _username)
                   .get(); // Add await here
               // ...
 
@@ -127,53 +138,74 @@ class _Register extends State<Register> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Registration Demo Page'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/image/background.jpeg'), // Replace with your image path
+            fit: BoxFit.cover, // Adjust fit as needed (cover, fill, etc.)
+          ),
+        ),
+        child: Container(
+          margin: EdgeInsets.all(
+            MediaQuery.of(context).size.height * 0.1,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
 
-          children: [
-            Form(
-              autovalidateMode: AutovalidateMode.always,
-              key: _formKey,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 50),
-                height: MediaQuery.of(context).size.height * 0.6,
-                width: MediaQuery.of(context).size.width * 0.30,
-                decoration: BoxDecoration(
-                  color: Colors.orange[100],
-                  borderRadius: BorderRadius.circular(20.0),
+                  decoration: BoxDecoration(
+                    color: Colors.teal[400],
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Welcome Back!', style: TextStyle(color: Colors.white, fontSize: 24)),
+                      const SizedBox(height: 20),
+                      const Text('To keep onnected with us please login with your personal info',
 
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(1.0),
-                      blurRadius: 25.0,
-                      offset: const Offset(0.0, 5.0), // adjust these values to change the shadow direction and spread
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Welcome ',style: TextStyle( fontSize: 40),),
-                    const SizedBox(height: 25.0),
-                    emailField,
-                    const SizedBox(height: 25.0),
-                    passwordField,
-                    const SizedBox(height: 25.0),
-                    txtbutton,
-                    const SizedBox(height: 25.0),
-                    registerButton,
-
-                  ],
+                          style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
+                      const SizedBox(height: 20),
+                      loginButton,
+                      ElevatedButton(onPressed: () {
+                        widget.toggleView!();
+                      }, child: const Text('SIGN IN'))
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                  child:
+                  Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(30), bottomRight: Radius.circular(30)),
+                      ),
+                      padding : const EdgeInsets.all(20),
+                      child : Form(
+                        autovalidateMode: AutovalidateMode.always,
+                        key: _formKey,
+                        child: Column (
+                            mainAxisAlignment : MainAxisAlignment.center,
+                            children : [
+                              emailField,
+                              passwordField,
+                              registerButton,
+
+
+                            ]
+                        ),
+                      )
+                  )
+              )
+            ],
+          ),
         ),
       ),
     );

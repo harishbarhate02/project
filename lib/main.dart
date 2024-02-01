@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:untitled/screen/splash.dart';
+import 'package:untitled/screen/wrapper.dart';
 import 'firebase_options.dart';
 import 'services/auth.dart';
 import 'model/FirebaseUser.dart';
@@ -22,10 +23,10 @@ class MyApp extends StatelessWidget {
       initialData: null,
       child: MaterialApp(
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
           useMaterial3: true,
         ),
-        home: const Splash(),
+        home: Wrapper(),
       ),
     );
   }

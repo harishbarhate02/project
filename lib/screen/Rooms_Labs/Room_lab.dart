@@ -1,11 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class Room {
+
   final String id;
-  final String name;
-  final String category;
-  final int capacity;
+  late String name;
+  late String category;
+  late int capacity;
+
   factory Room.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
     return Room(
       id: doc.id,
@@ -48,37 +52,44 @@ class _RoomsLabsState extends State<RoomsLabs> {
   }
 
   Future<void> _fetchRooms() async {
-    final snapshot = await _firestore.collection('rooms').get();
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    final snapshot = await _firestore.collection('users').doc(userId).collection('rooms').get();
     _rooms.clear();
     for (final doc in snapshot.docs) {
-      _rooms.add(Room(
-        id: doc.id,
-        name: doc.data()['name'] as String,
-        category: doc.data()['category'] as String,
-        capacity: doc.data()['capacity'] as int,
-      ));
+      if (doc.exists) {
+        _rooms.add(Room(
+          id: doc.id,
+          name: doc.data()['name'] as String? ?? '',
+          category: doc.data()['category'] as String? ?? '',
+          capacity: doc.data()['capacity'] as int? ?? 0,
+        ));
+      }
     }
     setState(() {});
   }
 
   Future<void> addRoom(Room room) async {
-    await _firestore.collection('rooms').add(room.toJson());
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    await FirebaseFirestore.instance.collection('users').doc(userId).collection('rooms').add(room.toJson());
     _fetchRooms(); // Refresh the list
   }
 
   Future<void> _editRoom(Room room) async {
-    await _firestore.collection('rooms').doc(room.id).update(room.toJson());
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    await _firestore.collection('users').doc(userId).collection('rooms').doc(room.id).update(room.toJson());
     _fetchRooms(); // Refresh the list
   }
 
   Future<void> _deleteRoom(Room room) async {
-    await _firestore.collection('rooms').doc(room.id).delete();
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    await _firestore.collection('users').doc(userId).collection('rooms').doc(room.id).delete();
     _fetchRooms(); // Refresh the list
   }
 
   @override
   void initState() {
     super.initState();
+    _fetchRooms();
     // Replace this with your local data fetching or add a function to generate mock data
   }
 
@@ -161,11 +172,12 @@ class _RoomsLabsState extends State<RoomsLabs> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(room.name),
+            Text(room.category),
             Text(room.capacity.toString()),
             Row(
               children: [
                 IconButton(
-                  onPressed: () => _editRoom(room),
+                  onPressed: () => _editRoomDialog(room),
                   icon: const Icon(Icons.edit),
                 ),
                 IconButton(
@@ -187,10 +199,11 @@ class _RoomsLabsState extends State<RoomsLabs> {
       builder: (context) => AlertDialog(
         title: const Text('Add New Room'),
         content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: _idController,
-              decoration: const InputDecoration(hintText: 'Enter room name'),
+              decoration: const InputDecoration(hintText: 'Enter room id'),
             ),
             TextField(
               controller: _nameController,
@@ -232,7 +245,8 @@ class _RoomsLabsState extends State<RoomsLabs> {
               final roomCapacity = int.tryParse(_capacityController.text);
 
               if (roomName.isNotEmpty) {
-                _firestore.collection('rooms').add({
+                final String userId = FirebaseAuth.instance.currentUser!.uid;
+                _firestore.collection('users').doc(userId).collection('rooms').add({
                   'id': roomId,
                   'name': roomName,
                   'category': roomCategory,
@@ -244,6 +258,51 @@ class _RoomsLabsState extends State<RoomsLabs> {
               }
             },
             child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _editRoomDialog(Room room) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Room'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Similar to the add room dialog, but pre-fill the fields with existing data
+            TextField(
+              controller: _nameController..text = room.name,
+              decoration: const InputDecoration(hintText: 'Enter room name'),
+            ),
+            TextField(
+              controller: _capacityController..text = room.capacity.toString(),
+              decoration: const InputDecoration(hintText: 'Enter Capacity'),
+            ),
+            // Other fields as needed
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              // Update the room object with the edited values
+              room.name = _nameController.text;
+              room.capacity = int.tryParse(_capacityController.text) ?? 0;
+
+              // Call the _editRoom function
+              _editRoom(room);
+
+              // Clear controllers and close dialog
+              _nameController.clear();
+              Navigator.pop(context);
+            },
+            child: const Text('Save'),
           ),
         ],
       ),
