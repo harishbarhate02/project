@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Faculty') ,
+        title: const Text('Add Faculty'),
       ),
       body: Center(
         child: ElevatedButton(
@@ -78,14 +78,9 @@ class AddFacultyPopup extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-
           child: const Text('Cancel'),
         ),
       ],
     );
   }
 }
-
-
-
-

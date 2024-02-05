@@ -1,10 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class Room {
-
   final String id;
   late String name;
   late String category;
@@ -19,7 +17,11 @@ class Room {
     );
   }
 
-  Room({required this.id, required this.name, required this.capacity,required this.category});
+  Room(
+      {required this.id,
+      required this.name,
+      required this.capacity,
+      required this.category});
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -30,6 +32,7 @@ class Room {
     };
   }
 }
+
 class RoomsLabs extends StatefulWidget {
   const RoomsLabs({super.key});
 
@@ -38,7 +41,7 @@ class RoomsLabs extends StatefulWidget {
 }
 
 class _RoomsLabsState extends State<RoomsLabs> {
-  final _rooms = <Room>[];// List to store rooms
+  final _rooms = <Room>[]; // List to store rooms
   final _firestore = FirebaseFirestore.instance;
   String _selectedCategory = 'Room'; // Default selection for dropdown
   final TextEditingController _nameController = TextEditingController();
@@ -53,7 +56,11 @@ class _RoomsLabsState extends State<RoomsLabs> {
 
   Future<void> _fetchRooms() async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    final snapshot = await _firestore.collection('users').doc(userId).collection('rooms').get();
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('rooms')
+        .get();
     _rooms.clear();
     for (final doc in snapshot.docs) {
       if (doc.exists) {
@@ -70,19 +77,33 @@ class _RoomsLabsState extends State<RoomsLabs> {
 
   Future<void> addRoom(Room room) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    await FirebaseFirestore.instance.collection('users').doc(userId).collection('rooms').add(room.toJson());
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('rooms')
+        .add(room.toJson());
     _fetchRooms(); // Refresh the list
   }
 
   Future<void> _editRoom(Room room) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    await _firestore.collection('users').doc(userId).collection('rooms').doc(room.id).update(room.toJson());
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('rooms')
+        .doc(room.id)
+        .update(room.toJson());
     _fetchRooms(); // Refresh the list
   }
 
   Future<void> _deleteRoom(Room room) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    await _firestore.collection('users').doc(userId).collection('rooms').doc(room.id).delete();
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('rooms')
+        .doc(room.id)
+        .delete();
     _fetchRooms(); // Refresh the list
   }
 
@@ -101,71 +122,143 @@ class _RoomsLabsState extends State<RoomsLabs> {
       appBar: AppBar(
         title: const Text('Rooms and Labs'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Search rooms and labs...',
-                    ),
-                    onChanged: (searchText) {
-                      if (searchText.isEmpty) {
-                        _fetchRooms();
-                      } else {
-                        _firestore
-                            .collection('rooms')
-                            .where('name', isGreaterThanOrEqualTo: searchText)
-                            .get()
-                            .then((snapshot) {
-                          _rooms.clear();
-                          for (final doc in snapshot.docs) {
-                            _rooms.add(Room.fromDocument(doc));
+      // body: Column(
+      //   children: [
+      //     Padding(
+      //       padding: const EdgeInsets.all(8.0),
+      //       child: Row(
+      //         children: [
+      //           Expanded(
+      //             child: TextField(
+      //               decoration: const InputDecoration(
+      //                 hintText: 'Search rooms and labs...',
+      //               ),
+      //               onChanged: (searchText) {
+      //                 if (searchText.isEmpty) {
+      //                   _fetchRooms();
+      //                 } else {
+      //                   _firestore
+      //                       .collection('rooms')
+      //                       .where('name', isGreaterThanOrEqualTo: searchText)
+      //                       .get()
+      //                       .then((snapshot) {
+      //                     _rooms.clear();
+      //                     for (final doc in snapshot.docs) {
+      //                       _rooms.add(Room.fromDocument(doc));
+      //                     }
+      //                     setState(() {});
+      //                   });
+      //                 }
+      //                 // Implement search functionality
+      //               },
+      //             ),
+      //           ),
+      //           const SizedBox(width: 10),
+      //           ElevatedButton(
+      //             onPressed: () {
+      //               _addNewRoom();
+      //               // Navigator.push(
+      //               //   context,
+      //               //   MaterialPageRoute(builder: (context) => AddRoomLabDialog()),
+      //               // );
+      //
+      //             },
+      //             child: const Text('Add New'),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //     Expanded(
+      //       child: ListView.builder(
+      //         itemCount: _rooms.length,
+      //         itemBuilder: (context, index) {
+      //           final room = _rooms[index];
+      //           return _buildTableRow(room);
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width * .9,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * .4,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            hintText: 'Search Rooms and labs...',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            )),
+                        onChanged: (searchText) {
+                          if (searchText.isEmpty) {
+                            _fetchRooms();
+                          } else {
+                            _firestore
+                                .collection('rooms')
+                                .where('name',
+                                    isGreaterThanOrEqualTo: searchText)
+                                .get()
+                                .then((snapshot) {
+                              _rooms.clear();
+                              for (final doc in snapshot.docs) {
+                                _rooms.add(Room.fromDocument(doc));
+                              }
+                              setState(() {});
+                            });
                           }
-                          setState(() {});
-                        });
-                      }
-                      // Implement search functionality
+                          // Implement search functionality
+                        },
+                      ),
+                    ),
+                    Expanded(child: const SizedBox(width: 10)),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              //to set border radius to button
+                              borderRadius: BorderRadius.circular(20)),
+                          padding: EdgeInsets.only(
+                              left: 25,
+                              top: 25,
+                              right: 25,
+                              bottom: 25) //content padding inside button
+                          ),
+                      onPressed: () {
+                        _addNewRoom();
+                      },
+                      child: const Text('Add New'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * .8,
+                  child: ListView.builder(
+                    itemCount: _rooms.length,
+                    itemBuilder: (context, index) {
+                      final Faculty = _rooms[index];
+                      return _buildTableRow(Faculty);
                     },
                   ),
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    _addNewRoom();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => AddRoomLabDialog()),
-                    // );
-
-                  },
-                  child: const Text('Add New'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _rooms.length,
-              itemBuilder: (context, index) {
-                final room = _rooms[index];
-                return _buildTableRow(room);
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildTableRow(Room room) {
     return GestureDetector(
-      onTap: () {
-
-      },
+      onTap: () {},
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -197,41 +290,44 @@ class _RoomsLabsState extends State<RoomsLabs> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add New Room'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _idController,
-              decoration: const InputDecoration(hintText: 'Enter room id'),
-            ),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(hintText: 'Enter room name'),
-            ),
-            DropdownButtonFormField<String>(
-              value: _selectedCategory,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedCategory = newValue!;
-                });
-              },
-              items: <String>['Room', 'Lab'].map<DropdownMenuItem<String>>(
-                    (String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
+        title: const Text('Add New Room/Lab'),
+        content: Container(
+          width: 200, // Set the desired width
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _idController,
+                decoration: const InputDecoration(hintText: 'Enter room id'),
+              ),
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(hintText: 'Enter room name'),
+              ),
+              DropdownButtonFormField<String>(
+                value: _selectedCategory,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCategory = newValue!;
+                  });
                 },
-              ).toList(),
-            ),
-            TextField(
-              controller: _capacityController,
-              decoration: const InputDecoration(hintText: 'Enter Capacity'),
-            ),
-          ],
+                items: <String>['Room', 'Lab'].map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
+              ),
+              TextField(
+                controller: _capacityController,
+                decoration: const InputDecoration(hintText: 'Enter Capacity'),
+              ),
+            ],
+          ),
         ),
-
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -246,7 +342,11 @@ class _RoomsLabsState extends State<RoomsLabs> {
 
               if (roomName.isNotEmpty) {
                 final String userId = FirebaseAuth.instance.currentUser!.uid;
-                _firestore.collection('users').doc(userId).collection('rooms').add({
+                _firestore
+                    .collection('users')
+                    .doc(userId)
+                    .collection('rooms')
+                    .add({
                   'id': roomId,
                   'name': roomName,
                   'category': roomCategory,
@@ -308,6 +408,4 @@ class _RoomsLabsState extends State<RoomsLabs> {
       ),
     );
   }
-
-
 }

@@ -1,35 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class Faculty {
-
   final String id;
   late String name;
-  late String category;
-  late int capacity;
 
   factory Faculty.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
     return Faculty(
-      id: doc.id,
+      id: doc.data()!['id'] ?? '',
       name: doc.data()!['name'] ?? '',
-      capacity: doc.data()!['capacity'] ?? 0,
-      category: doc.data()!['category'] ?? '',
     );
   }
 
-  Faculty({required this.id, required this.name, required this.capacity,required this.category});
+  Faculty({required this.id, required this.name});
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'category': category,
-      'capacity': capacity,
-      // Add other attributes as needed
     };
   }
 }
+
 class FacultysLabs extends StatefulWidget {
   const FacultysLabs({super.key});
 
@@ -38,30 +30,31 @@ class FacultysLabs extends StatefulWidget {
 }
 
 class _FacultysLabsState extends State<FacultysLabs> {
-  final _Facultys = <Faculty>[];// List to store Facultys
+  final _facultys = <Faculty>[]; // List to store Facultys
   final _firestore = FirebaseFirestore.instance;
-  String _selectedCategory = 'Faculty'; // Default selection for dropdown
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _capacityController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
+
   @override
   void dispose() {
     _nameController.dispose();
-    _capacityController.dispose();
+    _idController.dispose();
     super.dispose();
   }
 
   Future<void> _fetchFacultys() async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    final snapshot = await _firestore.collection('users').doc(userId).collection('Facultys').get();
-    _Facultys.clear();
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('Facultys')
+        .get();
+    _facultys.clear();
     for (final doc in snapshot.docs) {
       if (doc.exists) {
-        _Facultys.add(Faculty(
-          id: doc.id,
+        _facultys.add(Faculty(
+          id: doc.data()['id'] as String? ?? '',
           name: doc.data()['name'] as String? ?? '',
-          category: doc.data()['category'] as String? ?? '',
-          capacity: doc.data()['capacity'] as int? ?? 0,
         ));
       }
     }
@@ -70,19 +63,33 @@ class _FacultysLabsState extends State<FacultysLabs> {
 
   Future<void> addFaculty(Faculty Faculty) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    await FirebaseFirestore.instance.collection('users').doc(userId).collection('Facultys').add(Faculty.toJson());
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('Facultys')
+        .add(Faculty.toJson());
     _fetchFacultys(); // Refresh the list
   }
 
   Future<void> _editFaculty(Faculty Faculty) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    await _firestore.collection('users').doc(userId).collection('Facultys').doc(Faculty.id).update(Faculty.toJson());
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('Facultys')
+        .doc(Faculty.id)
+        .update(Faculty.toJson());
     _fetchFacultys(); // Refresh the list
   }
 
   Future<void> _deleteFaculty(Faculty Faculty) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
-    await _firestore.collection('users').doc(userId).collection('Facultys').doc(Faculty.id).delete();
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('Facultys')
+        .doc(Faculty.id)
+        .delete();
     _fetchFacultys(); // Refresh the list
   }
 
@@ -99,81 +106,97 @@ class _FacultysLabsState extends State<FacultysLabs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Facultys and Labs'),
+        title: const Text('Faculty'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Search Facultys and labs...',
-                    ),
-                    onChanged: (searchText) {
-                      if (searchText.isEmpty) {
-                        _fetchFacultys();
-                      } else {
-                        _firestore
-                            .collection('Facultys')
-                            .where('name', isGreaterThanOrEqualTo: searchText)
-                            .get()
-                            .then((snapshot) {
-                          _Facultys.clear();
-                          for (final doc in snapshot.docs) {
-                            _Facultys.add(Faculty.fromDocument(doc));
+      body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width * .9,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * .4,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            hintText: 'Search Facultys and labs...',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            )),
+                        onChanged: (searchText) {
+                          if (searchText.isEmpty) {
+                            _fetchFacultys();
+                          } else {
+                            _firestore
+                                .collection('Facultys')
+                                .where('name',
+                                    isGreaterThanOrEqualTo: searchText)
+                                .get()
+                                .then((snapshot) {
+                              _facultys.clear();
+                              for (final doc in snapshot.docs) {
+                                _facultys.add(Faculty.fromDocument(doc));
+                              }
+                              setState(() {});
+                            });
                           }
-                          setState(() {});
-                        });
-                      }
-                      // Implement search functionality
+                          // Implement search functionality
+                        },
+                      ),
+                    ),
+                    Expanded(child: const SizedBox(width: 10)),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              //to set border radius to button
+                              borderRadius: BorderRadius.circular(20)),
+                          padding: EdgeInsets.only(
+                              left: 25,
+                              top: 25,
+                              right: 25,
+                              bottom: 25) //content padding inside button
+                          ),
+                      onPressed: () {
+                        _addNewFaculty();
+                      },
+                      child: const Text('Add New'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * .8,
+                  child: ListView.builder(
+                    itemCount: _facultys.length,
+                    itemBuilder: (context, index) {
+                      final Faculty = _facultys[index];
+                      return _buildTableRow(Faculty);
                     },
                   ),
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    _addNewFaculty();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => AddFacultyLabDialog()),
-                    // );
-
-                  },
-                  child: const Text('Add New'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _Facultys.length,
-              itemBuilder: (context, index) {
-                final Faculty = _Facultys[index];
-                return _buildTableRow(Faculty);
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildTableRow(Faculty Faculty) {
     return GestureDetector(
-      onTap: () {
-
-      },
+      onTap: () {},
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text(Faculty.id),
             Text(Faculty.name),
-            Text(Faculty.category),
-            Text(Faculty.capacity.toString()),
+            // Text(Faculty.category),
+            // Text(Faculty.capacity.toString()),
             Row(
               children: [
                 IconButton(
@@ -198,9 +221,11 @@ class _FacultysLabsState extends State<FacultysLabs> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add New Faculty'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        content: Container(
+          width: 200, // Set the desired width
+          padding: const EdgeInsets.all(10.0),
+
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
             TextField(
               controller: _idController,
               decoration: const InputDecoration(hintText: 'Enter Faculty id'),
@@ -209,29 +234,29 @@ class _FacultysLabsState extends State<FacultysLabs> {
               controller: _nameController,
               decoration: const InputDecoration(hintText: 'Enter Faculty name'),
             ),
-            DropdownButtonFormField<String>(
-              value: _selectedCategory,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedCategory = newValue!;
-                });
-              },
-              items: <String>['Faculty', 'Lab'].map<DropdownMenuItem<String>>(
-                    (String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                },
-              ).toList(),
-            ),
-            TextField(
-              controller: _capacityController,
-              decoration: const InputDecoration(hintText: 'Enter Capacity'),
-            ),
-          ],
+            // DropdownButtonFormField<String>(
+            //   value: _selectedCategory,
+            //   onChanged: (String? newValue) {
+            //     setState(() {
+            //       _selectedCategory = newValue!;
+            //     });
+            //   },
+            //   items: <String>['Faculty', 'Lab'].map<DropdownMenuItem<String>>(
+            //     (String value) {
+            //       return DropdownMenuItem<String>(
+            //         value: value,
+            //         child: Text(value),
+            //       );
+            //     },
+            //   ).toList(),
+            // ),
+            //   TextField(
+            //     controller: _capacityController,
+            //     decoration: const InputDecoration(hintText: 'Enter Capacity'),
+            //   ),
+            // ],
+          ]),
         ),
-
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -241,16 +266,20 @@ class _FacultysLabsState extends State<FacultysLabs> {
             onPressed: () {
               final FacultyId = _idController.text;
               final FacultyName = _nameController.text;
-              final FacultyCategory = _selectedCategory;
-              final FacultyCapacity = int.tryParse(_capacityController.text);
+              // final FacultyCategory = _selectedCategory;
+              // final FacultyCapacity = int.tryParse(_capacityController.text);
 
               if (FacultyName.isNotEmpty) {
                 final String userId = FirebaseAuth.instance.currentUser!.uid;
-                _firestore.collection('users').doc(userId).collection('Facultys').add({
+                _firestore
+                    .collection('users')
+                    .doc(userId)
+                    .collection('Facultys')
+                    .add({
                   'id': FacultyId,
                   'name': FacultyName,
-                  'category': FacultyCategory,
-                  'capacity': FacultyCapacity, // Set default capacity
+                  // 'category': FacultyCategory,
+                  // 'capacity': FacultyCapacity, // Set default capacity
                 });
                 _nameController.clear();
                 Navigator.pop(context);
@@ -277,10 +306,11 @@ class _FacultysLabsState extends State<FacultysLabs> {
               controller: _nameController..text = Faculty.name,
               decoration: const InputDecoration(hintText: 'Enter Faculty name'),
             ),
-            TextField(
-              controller: _capacityController..text = Faculty.capacity.toString(),
-              decoration: const InputDecoration(hintText: 'Enter Capacity'),
-            ),
+            // TextField(
+            //   // controller: _capacityController
+            //   //   ..text = Faculty.capacity.toString(),
+            //   decoration: const InputDecoration(hintText: 'Enter Capacity'),
+            // ),
             // Other fields as needed
           ],
         ),
@@ -293,7 +323,7 @@ class _FacultysLabsState extends State<FacultysLabs> {
             onPressed: () {
               // Update the Faculty object with the edited values
               Faculty.name = _nameController.text;
-              Faculty.capacity = int.tryParse(_capacityController.text) ?? 0;
+              // Faculty.capacity = int.tryParse(_capacityController.text) ?? 0;
 
               // Call the _editFaculty function
               _editFaculty(Faculty);
@@ -308,6 +338,4 @@ class _FacultysLabsState extends State<FacultysLabs> {
       ),
     );
   }
-
-
 }
