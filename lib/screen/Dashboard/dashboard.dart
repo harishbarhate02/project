@@ -1,5 +1,6 @@
 // TODO Implement this library.
 import 'package:flutter/material.dart';
+import 'package:untitled/screen/Rooms_Labs/Room_lab.dart';
 import 'navbar.dart';
 
 class Home extends StatefulWidget {
@@ -46,38 +47,51 @@ class _Home extends State<Home> {
         child: Column(
 
           children: [
-            Row(children: [
-              Expanded(
-                child: Center(child: itemdetails('Rooms/Labs', '10')),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.053,
-              ),
-              itemdetails('Courses', '4'),
-              SizedBox(
-                width:MediaQuery.of(context).size.width * 0.053,
-              ),
-              itemdetails('Faculty', '10'),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.053,
-              ),
-              itemdetails('Classes', '5'),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.053,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle button press for "Rooms/Labs"
+                    },
+                    child: Center(child: itemdetails('Rooms/Labs', '10', RoomsLabs())),
+                  ),
+                ),
+                SizedBox(width: 10.0), // Fixed spacing
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle button press for "Courses"
+                  },
+                  child: itemdetails('Courses', '4', CoursesLabs()),
+                ),
+                SizedBox(width: 10.0), // Fixed spacing
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle button press for "Faculty"
+                  },
+                  child: itemdetails('Faculty', '10', FacultysLabs()),
+                ),
+                SizedBox(width: 10.0), // Fixed spacing
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle button press for "Classes"
+                  },
+                  child: itemdetails('Classes', '5'),
+                ),
+              ],
+            ),
 
-            ]),
             Padding(
-              padding: const EdgeInsets.only(top: 80.0),
+              padding: const EdgeInsets.only(top: 40.0),
               child: TimetableGeneratorButon,
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  itemdetails(String title, String count) => Container(
+  itemdetails(String title, String count, Widget route) => Container(
     margin: EdgeInsets.all(5),
         padding: EdgeInsets.all(8),
     height: MediaQuery.of(context).size.height * 0.22,
@@ -99,12 +113,23 @@ class _Home extends State<Home> {
       //   ),
       // ]
     ),
-    child: Column(
-      children: [
-        Text(title,style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-        SizedBox(height: 10,),
-        Text(count,style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-      ]
+    child: InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => route),
+        );
+
+      },
+      child: Container(
+        child: Column(
+          children: [
+            Text(title,style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+            SizedBox(height: 10,),
+            Text(count,style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+          ]
+        ),
+      ),
     ),
   );
 }
