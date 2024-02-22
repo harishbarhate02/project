@@ -262,7 +262,7 @@ class _RoomsLabsState extends State<RoomsLabs> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(room.name),
             Text(room.category),
