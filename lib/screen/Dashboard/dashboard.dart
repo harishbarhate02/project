@@ -15,7 +15,7 @@ class _Home extends State<Home> {
     final TimetableGeneratorButon = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(30.0),
-        color: Colors.white,
+        color: Colors.teal[600],
         child: MaterialButton(
           minWidth: MediaQuery.of(context).size.width * .25,
           height: MediaQuery.of(context).size.height * .1,
@@ -34,11 +34,11 @@ class _Home extends State<Home> {
         ));
 
     return Scaffold(
-      backgroundColor: Colors.orange[200],
+      backgroundColor: Colors.white,
       drawer: NavBar(),
       appBar: AppBar(
         title: const Text('Dashbooard'),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.teal[600],
       ),
       body: Container(
         padding:  EdgeInsets.only(left:MediaQuery.of(context).size.width * 0.04,top: 35),
@@ -47,21 +47,23 @@ class _Home extends State<Home> {
 
           children: [
             Row(children: [
-              itemdetails('Room', '8'),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.04,
+              Expanded(
+                child: Center(child: itemdetails('Rooms/Labs', '10')),
               ),
-              itemdetails('romm', '8'),
               SizedBox(
-                width:MediaQuery.of(context).size.width * 0.04,
+                width: MediaQuery.of(context).size.width * 0.053,
               ),
-              itemdetails('romm', '8'),
+              itemdetails('Courses', '4'),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.04,
+                width:MediaQuery.of(context).size.width * 0.053,
               ),
-              itemdetails('romm', '8'),
+              itemdetails('Faculty', '10'),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.04,
+                width: MediaQuery.of(context).size.width * 0.053,
+              ),
+              itemdetails('Classes', '5'),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.053,
               ),
 
             ]),
@@ -81,22 +83,27 @@ class _Home extends State<Home> {
     height: MediaQuery.of(context).size.height * 0.22,
     width: MediaQuery.of(context).size.width * 0.17,
     decoration: BoxDecoration(
-      color: Colors.deepOrange[400],
+      color: Colors.white,
           borderRadius: BorderRadius.circular(40),
-      boxShadow: [
-        BoxShadow(
-          offset: Offset(0, 5),
-          blurRadius: 5,
-          color: Color(0xffEEEEEE),
-        spreadRadius: 2
-        ),
-      ]
+      border: Border.all(
+        color: Color(0xFF00796B), // Customize border color
+        width: 2.0, // Adjust border width
+        style: BorderStyle.solid, // Choose border style (e.g., dashed, dotted)
+      ),
+      // boxShadow: [
+      //   BoxShadow(
+      //     offset: Offset(0, 5),
+      //     blurRadius: 5,
+      //     color: Color(0xFF00796B),
+      //   spreadRadius: 2
+      //   ),
+      // ]
     ),
     child: Column(
       children: [
-        Text(title,style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
+        Text(title,style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
         SizedBox(height: 10,),
-        Text(count,style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
+        Text(count,style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
       ]
     ),
   );
