@@ -62,7 +62,7 @@ class _Home extends State<Home> {
                   onPressed: () {
                     // Handle button press for "Courses"
                   },
-                  child: itemdetails('Courses', '4', Home()),
+                  child: itemdetails('Courses', '4', CoursesLabs()),
                 ),
                 SizedBox(width: 10.0), // Fixed spacing
                 ElevatedButton(
