@@ -5,7 +5,7 @@ class CoursesLabs extends StatefulWidget {
   State<> createState() => _State();
 }
 
-class _State extends State<> {
+class CoursesLabs extends State<> {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
