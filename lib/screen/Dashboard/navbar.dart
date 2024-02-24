@@ -7,7 +7,7 @@ import '../../services/auth.dart';
 // import '../../services/data_model.dart';
 import '../Courses/courses.dart';
 import '../Rooms_Labs/Room_lab.dart';
-// import '../Rooms_Labs/Room_lab.dart';
+
 
 class NavBar extends StatelessWidget {
   NavBar({super.key});
@@ -49,7 +49,7 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CourseData()),
+                MaterialPageRoute(builder: (context) => Home()),
               );
             }),
         ListTile(

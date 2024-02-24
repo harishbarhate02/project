@@ -1,4 +1,3 @@
-
 import'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../model/loginuser.dart';
@@ -20,7 +19,8 @@ class _Register extends State<Register> {
 
   bool _obscureText = true;
   final _email = TextEditingController();
-  final _password = TextEditingController();
+  final _confirmpassword = TextEditingController();
+  final _enterpassword = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 
@@ -43,11 +43,11 @@ class _Register extends State<Register> {
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             hintText: "Email",
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+            OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
-    final passwordField = TextFormField(
+    final enterPasswordField = TextFormField(
         obscureText: _obscureText,
-        controller: _password,
+        controller: _enterpassword,
         autofocus: false,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -61,10 +61,10 @@ class _Register extends State<Register> {
         },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Password",
+            hintText: "Enter Password",
             suffixIcon: IconButton(
               icon:
-                  Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+              Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   _obscureText = !_obscureText;
@@ -72,32 +72,65 @@ class _Register extends State<Register> {
               },
             ),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+            OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+
+    final confirmPasswordField = TextFormField(
+        obscureText: _obscureText,
+        controller: _confirmpassword,
+        autofocus: false,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return 'This field is required';
+          }
+          if (value.trim().length < 8) {
+            return 'Password must be at least 8 characters in length';
+          }
+          // Return null if the entered password is valid
+          return null;
+        },
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Confirm Password",
+            suffixIcon: IconButton(
+              icon:
+              Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+            ),
+            border:
+            OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+
 
     final loginButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
-      color: Theme.of(context).primaryColor,
+      color: Colors.white,
       child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width*.04,
+        minWidth: MediaQuery.of(context).size.width*.15,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-    widget.toggleView!();
-    },
+          widget.toggleView!();
+        },
 
         child: Text(
-          "Si",
-          style: TextStyle(color: Theme.of(context).primaryColorLight),
+          "Sign In",
+          style: TextStyle(color: Colors.teal[400], fontSize: 24),
           textAlign: TextAlign.center,
         ),
       ),
     );
+
     final registerButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
       child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width*.04,
+        minWidth: MediaQuery.of(context).size.width*.15,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -113,8 +146,7 @@ class _Register extends State<Register> {
             }
 
             dynamic result = await _auth.registerEmailPassword(
-
-                LoginUser(email: _email.text, password: _password.text));
+                LoginUser(email: _email.text, password: _enterpassword.text));
             if (result.uid == null) {
               //null means unsuccessfull authentication
 
@@ -130,7 +162,7 @@ class _Register extends State<Register> {
         },
         child: Text(
           "Register",
-          style: TextStyle(color: Theme.of(context).primaryColorLight),
+          style: TextStyle(color: Theme.of(context).primaryColorLight, fontSize: 24.0),
           textAlign: TextAlign.center,
         ),
       ),
@@ -166,16 +198,13 @@ class _Register extends State<Register> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Welcome Back!', style: TextStyle(color: Colors.white, fontSize: 24)),
+                      const Text('Welcome Back!', style: TextStyle(color: Colors.white, fontSize: 40)),
                       const SizedBox(height: 20),
                       const Text('To keep onnected with us please login with your personal info',
 
-                          style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
+                          style: TextStyle(color: Colors.white,fontSize: 15), textAlign: TextAlign.center),
                       const SizedBox(height: 20),
                       loginButton,
-                      ElevatedButton(onPressed: () {
-                        widget.toggleView!();
-                      }, child: const Text('SIGN IN'))
                     ],
                   ),
                 ),
@@ -194,8 +223,27 @@ class _Register extends State<Register> {
                         child: Column (
                             mainAxisAlignment : MainAxisAlignment.center,
                             children : [
-                              emailField,
-                              passwordField,
+                              const Text('Register Here',
+                                  style: TextStyle(
+                                      fontSize: 35, fontWeight: FontWeight.bold)),
+                              Center(
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width * 0.35,
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 20),
+                                        emailField,
+                                        const SizedBox(height: 20),
+                                        enterPasswordField,
+                                        const SizedBox(height: 20),
+                                        confirmPasswordField,
+
+                                      ],
+                                    )),
+                              ),
+
+
+                              const SizedBox(height: 40),
                               registerButton,
 
 

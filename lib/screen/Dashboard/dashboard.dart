@@ -1,6 +1,9 @@
 // TODO Implement this library.
 import 'package:flutter/material.dart';
+import 'package:untitled/screen/Classes/classes.dart';
+import 'package:untitled/screen/Faculty/faculty.dart';
 import 'package:untitled/screen/Rooms_Labs/Room_lab.dart';
+import '../Courses/courses.dart';
 import 'navbar.dart';
 
 class Home extends StatefulWidget {
@@ -44,41 +47,24 @@ class _Home extends State<Home> {
       body: Container(
         padding:  EdgeInsets.only(left:MediaQuery.of(context).size.width * 0.04,top: 35),
         margin: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.04),
+
         child: Column(
 
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Handle button press for "Rooms/Labs"
-                    },
-                    child: Center(child: itemdetails('Rooms/Labs', '10', RoomsLabs())),
-                  ),
-                ),
-                SizedBox(width: 10.0), // Fixed spacing
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle button press for "Courses"
-                  },
-                  child: itemdetails('Courses', '4', CoursesLabs()),
-                ),
-                SizedBox(width: 10.0), // Fixed spacing
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle button press for "Faculty"
-                  },
-                  child: itemdetails('Faculty', '10', FacultysLabs()),
-                ),
-                SizedBox(width: 10.0), // Fixed spacing
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle button press for "Classes"
-                  },
-                  child: itemdetails('Classes', '5'),
-                ),
-              ],
+            Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  itemdetails('Rooms/Labs', '10', RoomsLabs()),
+                  SizedBox(width: 10.0), // Fixed spacing
+                  itemdetails('Courses', '4', Home()),
+                  SizedBox(width: 10.0), // Fixed spacing
+                  itemdetails('Faculty', '10', FacultysLabs()),
+                  SizedBox(width: 10.0), // Fixed spacing
+                  itemdetails('Classes', '5',Class()),
+
+                ],
+              ),
             ),
 
             Padding(
