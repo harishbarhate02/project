@@ -178,9 +178,14 @@ class AddRoomLabDialogState extends State<AddRoomLabDialog> {
             // Add logic to save room/lab details
             // For example: call a function to handle the data
             var x = Room(
-                id: id, name: name, capacity: capacity, category: category);
+              id: id,
+              name: name,
+              capacity: capacity,
+              category: category,
+            );
+            // available: null);
 
-            Navigator.of(context).pop();
+            // Navigator.of(context).pop();
           },
           child: const Text('Save'),
         ),

@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Classes {
+class Class {
   final String id;
   late String classname;
   late String strength;
   late String course;
 
-  factory Classes.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
-    return Classes(
+  factory Class.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return Class(
       id: doc.data()!['id'] ?? '',
       classname: doc.data()!['classname'] ?? '',
       strength: doc.data()!['strength'] ?? '',
@@ -17,7 +17,7 @@ class Classes {
     );
   }
 
-  Classes({
+  Class({
     required this.id,
     required this.classname,
     required this.strength,
@@ -33,26 +33,26 @@ class Classes {
   }
 }
 
-class Class extends StatefulWidget {
-  const Class({super.key});
+class ClassLabs extends StatefulWidget {
+  const ClassLabs({super.key});
 
   @override
-  State<Class> createState() => _ClassState();
+  State<ClassLabs> createState() => _ClassLabsState();
 }
 
-class _ClassState extends State<Class> {
-  final _class = <Classes>[]; // List to store Classes
+class _ClassLabsState extends State<ClassLabs> {
+  final _class = <Class>[]; // List to store Classes
   final _firestore = FirebaseFirestore.instance;
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _classnameController = TextEditingController();
   final TextEditingController _strengthController = TextEditingController();
-  final TextEditingController _coursecontroller = TextEditingController();
+  final TextEditingController _courseController = TextEditingController();
   @override
   void dispose() {
     _idController.dispose();
     _classnameController.dispose();
     _strengthController.dispose();
-    _coursecontroller.dispose();
+    _courseController.dispose();
     super.dispose();
   }
 
@@ -66,8 +66,8 @@ class _ClassState extends State<Class> {
     _class.clear();
     for (final doc in snapshot.docs) {
       if (doc.exists) {
-        _class.add(Classes(
-          id: doc.data()['id'] as String? ?? '',
+        _class.add(Class(
+          id: doc.id,
           classname: doc.data()['classname'] as String? ?? '',
           strength: doc.data()['strength'] as String? ?? '',
           course: doc.data()['course'] as String? ?? '',
@@ -77,36 +77,36 @@ class _ClassState extends State<Class> {
     setState(() {});
   }
 
-  Future<void> addClasses(Classes Classes) async {
+  Future<void> addClass(Class classes) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .collection('CLasses')
-        .add(Classes.toJson());
+        .collection('classes')
+        .add(classes.toJson());
     _fetchClasses(); // Refresh the list
   }
 
-  Future<void> _editClasses(Classes Classes) async {
+  Future<void> _editClass(Class classes) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('Classes')
         // .doc(Classes.classname)
-        .doc(Classes.id)
-        .update(Classes.toJson());
+        .doc(classes.id as String?)
+        .update(classes.toJson());
     _fetchClasses(); // Refresh the list
   }
 
-  Future<void> _deleteClasses(Classes Classes) async {
+  Future<void> _deleteClass(Class classes) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('Classes')
         // .doc(Classes.classname)
-        .doc(Classes.id)
+        .doc(classes.id)
         .delete();
     _fetchClasses(); // Refresh the list
   }
@@ -155,7 +155,7 @@ class _ClassState extends State<Class> {
                                 .then((snapshot) {
                               _class.clear();
                               for (final doc in snapshot.docs) {
-                                _class.add(Classes.fromDocument(doc));
+                                _class.add(Class.fromDocument(doc));
                               }
                               setState(() {});
                             });
@@ -203,7 +203,7 @@ class _ClassState extends State<Class> {
     );
   }
 
-  Widget _buildTableRow(Classes Classes) {
+  Widget _buildTableRow(Class Classes) {
     return GestureDetector(
       onTap: () {},
       child: Padding(
@@ -221,7 +221,7 @@ class _ClassState extends State<Class> {
                   icon: const Icon(Icons.edit),
                 ),
                 IconButton(
-                  onPressed: () => _deleteClasses(Classes),
+                  onPressed: () => _deleteClass(Classes),
                   icon: const Icon(Icons.delete),
                 ),
               ],
@@ -252,7 +252,7 @@ class _ClassState extends State<Class> {
               decoration: const InputDecoration(hintText: 'Enter Strength'),
             ),
             TextField(
-              controller: _coursecontroller,
+              controller: _courseController,
               decoration: const InputDecoration(hintText: 'Enter Courses'),
             ),
           ]),
@@ -266,6 +266,7 @@ class _ClassState extends State<Class> {
             onPressed: () {
               final Classesname = _classnameController.text;
               final Classesstrength = _strengthController.text;
+              final Classescourse = _courseController.text;
               // final FacultyCategory = _selectedCategory;
               // final FacultyCapacity = int.tryParse(_capacityController.text);
 
@@ -278,6 +279,7 @@ class _ClassState extends State<Class> {
                     .add({
                   'classname': Classesname,
                   'strength': Classesstrength,
+                  'course': Classescourse,
                   // 'category': FacultyCategory,
                   // 'capacity': FacultyCapacity, // Set default capacity
                 });
@@ -293,7 +295,7 @@ class _ClassState extends State<Class> {
     );
   }
 
-  void _editClassesDialog(Classes Classes) {
+  void _editClassesDialog(Class Classes) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -304,8 +306,13 @@ class _ClassState extends State<Class> {
             // Similar to the add Faculty dialog, but pre-fill the fields with existing data
             TextField(
               controller: _strengthController..text = Classes.strength,
+              decoration: const InputDecoration(hintText: 'Enter Strength'),
+            ),
+            TextField(
+              controller: _courseController..text = Classes.course,
               decoration: const InputDecoration(hintText: 'Enter Course name'),
             ),
+
             // TextField(
             //   // controller: _capacityController
             //   //   ..text = Faculty.capacity.toString(),
@@ -323,13 +330,16 @@ class _ClassState extends State<Class> {
             onPressed: () {
               // Update the Faculty object with the edited values
               Classes.strength = _strengthController.text;
+              Classes.course = _courseController.text;
               // Faculty.capacity = int.tryParse(_capacityController.text) ?? 0;
 
               // Call the _editFaculty function
-              _editClasses(Classes);
+              _editClass(Classes);
 
               // Clear controllers and close dialog
               _strengthController.clear();
+              _courseController.clear();
+
               Navigator.pop(context);
             },
             child: const Text('Save'),

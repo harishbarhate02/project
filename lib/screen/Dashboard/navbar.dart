@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/screen/Classes/classes.dart';
 import 'package:untitled/screen/Dashboard/dashboard.dart';
 import 'package:untitled/screen/Faculty/faculty.dart';
 
 import '../../services/auth.dart';
-// import '../../services/data_model.dart';
+// import '../Popups/addnew_classes.dart';
+
+import '../Classes/classes.dart';
 import '../Courses/courses.dart';
 import '../Rooms_Labs/Room_lab.dart';
-
 
 class NavBar extends StatelessWidget {
   NavBar({super.key});
@@ -49,7 +49,7 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => CourseData()),
               );
             }),
         ListTile(
@@ -67,7 +67,7 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Class()),
+                MaterialPageRoute(builder: (context) => ClassLabs()),
               );
             }),
         ListTile(

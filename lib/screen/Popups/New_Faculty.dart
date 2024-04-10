@@ -67,20 +67,19 @@ class AddFacultyPopup extends StatelessWidget {
       actions: <Widget>[
         ElevatedButton(
           onPressed: () {
+            // String name = _nameController.text;
+            // int id = _idController.text;
             // Add functionality to save the new faculty details
             // For example, you can save the details to a database
             // or perform any required operations here
+            // saveFacultyDetails(id, name);
             Navigator.of(context).pop();
           },
           child: const Text('Save'),
         ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
-        ),
       ],
     );
   }
+
+  void saveFacultyDetails(id, name) {}
 }

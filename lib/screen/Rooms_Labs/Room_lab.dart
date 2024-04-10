@@ -122,6 +122,63 @@ class _RoomsLabsState extends State<RoomsLabs> {
       appBar: AppBar(
         title: const Text('Rooms and Labs'),
       ),
+      // body: Column(
+      //   children: [
+      //     Padding(
+      //       padding: const EdgeInsets.all(8.0),
+      //       child: Row(
+      //         children: [
+      //           Expanded(
+      //             child: TextField(
+      //               decoration: const InputDecoration(
+      //                 hintText: 'Search rooms and labs...',
+      //               ),
+      //               onChanged: (searchText) {
+      //                 if (searchText.isEmpty) {
+      //                   _fetchRooms();
+      //                 } else {
+      //                   _firestore
+      //                       .collection('rooms')
+      //                       .where('name', isGreaterThanOrEqualTo: searchText)
+      //                       .get()
+      //                       .then((snapshot) {
+      //                     _rooms.clear();
+      //                     for (final doc in snapshot.docs) {
+      //                       _rooms.add(Room.fromDocument(doc));
+      //                     }
+      //                     setState(() {});
+      //                   });
+      //                 }
+      //                 // Implement search functionality
+      //               },
+      //             ),
+      //           ),
+      //           const SizedBox(width: 10),
+      //           ElevatedButton(
+      //             onPressed: () {
+      //               _addNewRoom();
+      //               // Navigator.push(
+      //               //   context,
+      //               //   MaterialPageRoute(builder: (context) => AddRoomLabDialog()),
+      //               // );
+      //
+      //             },
+      //             child: const Text('Add New'),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //     Expanded(
+      //       child: ListView.builder(
+      //         itemCount: _rooms.length,
+      //         itemBuilder: (context, index) {
+      //           final room = _rooms[index];
+      //           return _buildTableRow(room);
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * .9,
@@ -140,13 +197,10 @@ class _RoomsLabsState extends State<RoomsLabs> {
                               borderRadius: BorderRadius.circular(20.0),
                             )),
                         onChanged: (searchText) {
-                          String? userId = FirebaseAuth.instance.currentUser?.uid;
                           if (searchText.isEmpty) {
                             _fetchRooms();
                           } else {
                             _firestore
-                                .collection('users')
-                                .doc(userId)
                                 .collection('rooms')
                                 .where('name',
                                     isGreaterThanOrEqualTo: searchText)
@@ -314,7 +368,7 @@ class _RoomsLabsState extends State<RoomsLabs> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Room'),
+        title: const Text('Edit Room/Lab'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

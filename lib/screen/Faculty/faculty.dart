@@ -61,34 +61,34 @@ class _FacultysLabsState extends State<FacultysLabs> {
     setState(() {});
   }
 
-  Future<void> addFaculty(Faculty Faculty) async {
+  Future<void> addFaculty(Faculty facultys) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .collection('Facultys')
-        .add(Faculty.toJson());
+        .add(facultys.toJson());
     _fetchFacultys(); // Refresh the list
   }
 
-  Future<void> _editFaculty(Faculty Faculty) async {
+  Future<void> _editFaculty(Faculty facultys) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('Facultys')
-        .doc(Faculty.id)
-        .update(Faculty.toJson());
+        .doc(facultys.id)
+        .update(facultys.toJson());
     _fetchFacultys(); // Refresh the list
   }
 
-  Future<void> _deleteFaculty(Faculty Faculty) async {
+  Future<void> _deleteFaculty(Faculty facultys) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('Facultys')
-        .doc(Faculty.id)
+        .doc(facultys.id)
         .delete();
     _fetchFacultys(); // Refresh the list
   }
@@ -293,7 +293,7 @@ class _FacultysLabsState extends State<FacultysLabs> {
     );
   }
 
-  void _editFacultyDialog(Faculty Faculty) {
+  void _editFacultyDialog(Faculty facultys) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -303,7 +303,7 @@ class _FacultysLabsState extends State<FacultysLabs> {
           children: [
             // Similar to the add Faculty dialog, but pre-fill the fields with existing data
             TextField(
-              controller: _nameController..text = Faculty.name,
+              controller: _nameController..text = facultys.name,
               decoration: const InputDecoration(hintText: 'Enter Faculty name'),
             ),
             // TextField(
@@ -322,11 +322,11 @@ class _FacultysLabsState extends State<FacultysLabs> {
           TextButton(
             onPressed: () {
               // Update the Faculty object with the edited values
-              Faculty.name = _nameController.text;
+              facultys.name = _nameController.text;
               // Faculty.capacity = int.tryParse(_capacityController.text) ?? 0;
 
               // Call the _editFaculty function
-              _editFaculty(Faculty);
+              _editFaculty(facultys);
 
               // Clear controllers and close dialog
               _nameController.clear();
