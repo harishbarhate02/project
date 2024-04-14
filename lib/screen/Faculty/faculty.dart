@@ -4,20 +4,31 @@ import 'package:flutter/material.dart';
 
 class Faculty {
   final String id;
+  final String fid;
   late String name;
+  final String department;
+  final String phone;
+
 
   factory Faculty.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
     return Faculty(
-      id: doc.data()!['id'] ?? '',
+      id: doc.id,
+      fid: doc.data()!['fid'] ?? '',
       name: doc.data()!['name'] ?? '',
+      department: doc.data()!['department'] ?? '',
+      phone: doc.data()!['phone'] ?? '',
     );
   }
 
-  Faculty({required this.id, required this.name});
+  Faculty({required this.id, required this.name, required this.fid, required this.department, required this.phone});
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'fid' : fid,
       'name': name,
+      'department': department,
+      'phone': phone,
+      // Add other attributes as needed
     };
   }
 }
@@ -53,8 +64,11 @@ class _FacultysLabsState extends State<FacultysLabs> {
     for (final doc in snapshot.docs) {
       if (doc.exists) {
         _facultys.add(Faculty(
-          id: doc.data()['id'] as String? ?? '',
+          id: doc.id,
+          fid: doc.data()['fid'] as String? ?? '',
           name: doc.data()['name'] as String? ?? '',
+          department: doc.data()['department'] as String? ?? '',
+          phone: doc.data()['phone'] as String? ?? '',
         ));
       }
     }
@@ -191,9 +205,9 @@ class _FacultysLabsState extends State<FacultysLabs> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(Faculty.id),
+            Text(Faculty.fid),
             Text(Faculty.name),
             // Text(Faculty.category),
             // Text(Faculty.capacity.toString()),
@@ -234,6 +248,9 @@ class _FacultysLabsState extends State<FacultysLabs> {
               controller: _nameController,
               decoration: const InputDecoration(hintText: 'Enter Faculty name'),
             ),
+            TextField(
+
+            )
             // DropdownButtonFormField<String>(
             //   value: _selectedCategory,
             //   onChanged: (String? newValue) {
@@ -276,7 +293,7 @@ class _FacultysLabsState extends State<FacultysLabs> {
                     .doc(userId)
                     .collection('Facultys')
                     .add({
-                  'id': FacultyId,
+                  'fid': FacultyId,
                   'name': FacultyName,
                   // 'category': FacultyCategory,
                   // 'capacity': FacultyCapacity, // Set default capacity
