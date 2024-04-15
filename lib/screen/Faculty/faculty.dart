@@ -6,9 +6,8 @@ class Faculty {
   final String id;
   final String fid;
   late String name;
-  final String department;
-  final String phone;
-
+  late String department;
+  late List<String> courses;
 
   factory Faculty.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
     return Faculty(
@@ -16,18 +15,23 @@ class Faculty {
       fid: doc.data()!['fid'] ?? '',
       name: doc.data()!['name'] ?? '',
       department: doc.data()!['department'] ?? '',
-      phone: doc.data()!['phone'] ?? '',
+      courses: doc.data()!['courses'] ?? [],
     );
   }
 
-  Faculty({required this.id, required this.name, required this.fid, required this.department, required this.phone});
+  Faculty(
+      {required this.id,
+      required this.name,
+      required this.fid,
+      required this.department,
+      required this.courses});
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'fid' : fid,
+      'fid': fid,
       'name': name,
       'department': department,
-      'phone': phone,
+      'courses': courses,
       // Add other attributes as needed
     };
   }
@@ -45,11 +49,15 @@ class _FacultysLabsState extends State<FacultysLabs> {
   final _firestore = FirebaseFirestore.instance;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
+  final TextEditingController _departmentController = TextEditingController();
+  final TextEditingController _subjectController = TextEditingController();
 
   @override
   void dispose() {
     _nameController.dispose();
     _idController.dispose();
+    _departmentController.dispose();
+    _subjectController.dispose();
     super.dispose();
   }
 
@@ -68,7 +76,7 @@ class _FacultysLabsState extends State<FacultysLabs> {
           fid: doc.data()['fid'] as String? ?? '',
           name: doc.data()['name'] as String? ?? '',
           department: doc.data()['department'] as String? ?? '',
-          phone: doc.data()['phone'] as String? ?? '',
+          courses: doc.data()['courses'] as List<String>? ?? [],
         ));
       }
     }
@@ -209,8 +217,8 @@ class _FacultysLabsState extends State<FacultysLabs> {
           children: [
             Text(Faculty.fid),
             Text(Faculty.name),
-            // Text(Faculty.category),
-            // Text(Faculty.capacity.toString()),
+            Text(Faculty.department),
+            Text(Faculty.courses.join(', ')),
             Row(
               children: [
                 IconButton(
@@ -242,36 +250,24 @@ class _FacultysLabsState extends State<FacultysLabs> {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             TextField(
               controller: _idController,
-              decoration: const InputDecoration(hintText: 'Enter Faculty id'),
+              decoration: const InputDecoration(
+                  hintText: 'Enter Faculty id', label: Text('ID')),
             ),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(hintText: 'Enter Faculty name'),
+              decoration: const InputDecoration(
+                  hintText: 'Enter Faculty name', label: Text('Name')),
             ),
             TextField(
-
-            )
-            // DropdownButtonFormField<String>(
-            //   value: _selectedCategory,
-            //   onChanged: (String? newValue) {
-            //     setState(() {
-            //       _selectedCategory = newValue!;
-            //     });
-            //   },
-            //   items: <String>['Faculty', 'Lab'].map<DropdownMenuItem<String>>(
-            //     (String value) {
-            //       return DropdownMenuItem<String>(
-            //         value: value,
-            //         child: Text(value),
-            //       );
-            //     },
-            //   ).toList(),
-            // ),
-            //   TextField(
-            //     controller: _capacityController,
-            //     decoration: const InputDecoration(hintText: 'Enter Capacity'),
-            //   ),
-            // ],
+              controller: _departmentController,
+              decoration: const InputDecoration(
+                  label: Text('Department'), hintText: 'Enter Department name'),
+            ),
+            TextField(
+              controller: _subjectController,
+              decoration: const InputDecoration(hintText: 'Enter subjects separated by spaces',
+                  label: Text('Subjects')),
+            ),
           ]),
         ),
         actions: [
@@ -283,8 +279,7 @@ class _FacultysLabsState extends State<FacultysLabs> {
             onPressed: () {
               final FacultyId = _idController.text;
               final FacultyName = _nameController.text;
-              // final FacultyCategory = _selectedCategory;
-              // final FacultyCapacity = int.tryParse(_capacityController.text);
+              final Department = _departmentController;
 
               if (FacultyName.isNotEmpty) {
                 final String userId = FirebaseAuth.instance.currentUser!.uid;
@@ -295,8 +290,8 @@ class _FacultysLabsState extends State<FacultysLabs> {
                     .add({
                   'fid': FacultyId,
                   'name': FacultyName,
-                  // 'category': FacultyCategory,
-                  // 'capacity': FacultyCapacity, // Set default capacity
+                  'department': Department,
+
                 });
                 _nameController.clear();
                 Navigator.pop(context);
@@ -323,11 +318,6 @@ class _FacultysLabsState extends State<FacultysLabs> {
               controller: _nameController..text = facultys.name,
               decoration: const InputDecoration(hintText: 'Enter Faculty name'),
             ),
-            // TextField(
-            //   // controller: _capacityController
-            //   //   ..text = Faculty.capacity.toString(),
-            //   decoration: const InputDecoration(hintText: 'Enter Capacity'),
-            // ),
             // Other fields as needed
           ],
         ),
@@ -340,7 +330,6 @@ class _FacultysLabsState extends State<FacultysLabs> {
             onPressed: () {
               // Update the Faculty object with the edited values
               facultys.name = _nameController.text;
-              // Faculty.capacity = int.tryParse(_capacityController.text) ?? 0;
 
               // Call the _editFaculty function
               _editFaculty(facultys);

@@ -18,9 +18,12 @@ class TimetableGenerator {
   final List<String> days;
   final List<String> timeSlots;
 
+  late  Map<String, int> subjectCount;
+
   TimetableGenerator(
       this.populationSize,
       this.subjects,
+      this.subjectCount,
       this.days,
       this.timeSlots,
       );
@@ -42,23 +45,48 @@ class TimetableGenerator {
 
     for (String day in days) {
       final List<Map<String, int>> daySchedule = [];
-      int remainingTimeSlots = timeSlots.length;
+      int remainingTimeSlots = 6;
+      if(day == 'saturday'){
+        remainingTimeSlots = 4;
+      }
 
       // Shuffle the subjects to randomly select a consecutive subset
       List<Map<String, int>> shuffledSubjects = List.from(subjects)..shuffle(random);
 
       for (Map<String, int> subject in shuffledSubjects) {
+        String subjectName = subject.keys.first;
         // Check if the subject's duration fits in the remaining time slots
         int subjectDuration = subject.values.first;
 
         // Add the subject to the timetable
-        daySchedule.add(subject);
-        remainingTimeSlots -= subjectDuration;
-
+        if (remainingTimeSlots > 0) {
+          if (remainingTimeSlots % 2!= 0 && subjectDuration % 2 != 0 && subjectCount[subjectName]!= 0) {
+            daySchedule.add(subject);
+            remainingTimeSlots -= subjectDuration;
+            subjectCount[subjectName] = subjectCount[subjectName]! - 1;
+          }
+          else if (remainingTimeSlots % 2 != 0 && subjectDuration % 2 == 0) {
+            continue;
+          }
+          else if (remainingTimeSlots % 2 == 0 && subjectDuration % 2 == 0 && subjectCount[subjectName]!= 0) {
+            daySchedule.add(subject);
+            subjects.remove(subject);
+            remainingTimeSlots -= subjectDuration;
+            subjectCount[subjectName] = (subjectCount[subjectName]! - 1);
+          }
+          else if (remainingTimeSlots % 2 == 0 && subjectDuration % 2 != 0 && subjectCount[subjectName]!= 0) {
+            daySchedule.add(subject);
+            remainingTimeSlots -= subjectDuration;
+            subjectCount[subjectName] = (subjectCount[subjectName]! - 1);
+          }
+          else{
+              daySchedule.add({'off': 1}); // Assuming breaks are 1 hour
+              remainingTimeSlots -= 1;
+          }
+        }
         // Add a break after every two hours
-        if (remainingTimeSlots > 0 && subjectDuration % 2 == 0) {
+        if (remainingTimeSlots > 0 && remainingTimeSlots % 2 == 0) {
           daySchedule.add({'Break': 1}); // Assuming breaks are 1 hour
-          remainingTimeSlots--;
         }
       }
 
@@ -97,6 +125,8 @@ class TimetableGenerator {
         mutation(child);
         newPopulation.add(child);
       }
+      subjectCount = Map.fromEntries(
+          subjects.map((subject) => MapEntry(subject.keys.first, 0)));
 
       population = newPopulation;
     }
@@ -115,12 +145,27 @@ void main() {
     {'CG-LAB': 2},
     {'ET-3 -LAB': 2},
     {'ET-4 -LAB': 2},
-
+    {'ab-LAB': 2},
+    {'bc-LAB': 2},
   ];
+  final Map<String, int> subjectcount = {
+    'SSEE': 3,
+    'CG': 3,
+    'CC': 3,
+    'PE-3': 3,
+    'BF': 3,
+    'CG-LAB': 1,
+    'ET-3 -LAB': 1,
+    'ET-4 -LAB': 1,
+    'ab-LAB': 1,
+    'bc-LAB': 1,
 
-  final List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  final List<String> timeSlots = ['11:00 AM - 12:00 PM', '12:00 PM - 1:00 PM', '1:15 PM - 2:15 PM', '2:15 PM - 3:15 PM', '3:45 PM'];
-  final TimetableGenerator timetableGenerator = TimetableGenerator(10, subjects, days, timeSlots);
+  };
+
+
+  final List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday','saturday'];
+  final List<String> timeSlots = ['11:00 AM - 12:00 PM', '12:00 PM - 1:00 PM', '1:15 PM - 2:15 PM', '2:15 PM - 3:15 PM', '3:45 PM- 4:45 PM','4:45 PM - 5:45 PM'];
+  final TimetableGenerator timetableGenerator = TimetableGenerator(10, subjects,subjectcount ,days, timeSlots);
 
   final Timetable bestTimetable = timetableGenerator.runGeneticAlgorithm(100);
 

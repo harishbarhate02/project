@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/screen/Dashboard/dashboard.dart';
 import 'package:untitled/screen/Faculty/faculty.dart';
+import 'package:untitled/screen/My_Account/my_account.dart';
 
 import '../../services/auth.dart';
 // import '../Popups/addnew_classes.dart';
@@ -49,7 +50,7 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CourseData()),
+                MaterialPageRoute(builder: (context) => Home()),
               );
             }),
         ListTile(
@@ -72,20 +73,11 @@ class NavBar extends StatelessWidget {
             }),
         ListTile(
             leading: const Icon(Icons.space_dashboard),
-            title: const Text("TimeSlots"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-              );
-            }),
-        ListTile(
-            leading: const Icon(Icons.space_dashboard),
             title: const Text("My Account"),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => MyAccountPage()),
               );
             }),
         ListTile(
